@@ -60,9 +60,10 @@ class WidgetUpdateService : Service() {
         // Use the first widget's option bundle to get the pixel size
         val opts = manager.getAppWidgetOptions(ids[0])
         val density = resources.displayMetrics.density
-        val maxDp   = opts.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH, 280)
-            .coerceAtLeast(opts.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 280))
-        val px = (maxDp * density).toInt().coerceAtLeast(280)
+        val widthDp  = opts.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH,  280)
+        val heightDp = opts.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 280)
+        val sqDp     = minOf(widthDp, heightDp).coerceAtLeast(90)
+        val px       = (sqDp * density).toInt()
 
         val bmp: Bitmap = renderer.render(px, settings, game)
 
