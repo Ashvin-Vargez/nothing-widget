@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.NothingWidget" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">#ff3b30</item>
+        <item name="colorPrimaryDark">#1c1c1e</item>
+        <item name="android:windowBackground">#1c1c1e</item>
+        <item name="android:statusBarColor">#1c1c1e</item>
+    </style>
+</resources>
