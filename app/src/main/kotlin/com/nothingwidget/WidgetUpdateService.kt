@@ -21,7 +21,9 @@ class WidgetUpdateService : Service() {
     // ── Frame loop (~15 fps = 66 ms)
     private val frameLoop = object : Runnable {
         override fun run() {
-            game.update()
+            repeat(4) {
+                game.update()
+            }
             pushFrame()
             handler.postDelayed(this, 66L)
         }
