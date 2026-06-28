@@ -15,7 +15,8 @@ class WidgetRenderer {
     // ── Colours
     private val C_BG   = Color.parseColor("#1c1c1e")
     private val C_LIT  = Color.parseColor("#d0d0d0")
-    private val C_DIM  = Color.parseColor("#2c2c2f")
+    private val C_DIM_WEEK  = Color.parseColor("#4a4a4e")   // week bar only — much more visible
+    private val C_DIM_OTHER = Color.parseColor("#383838")    // JUN / 2026 / year — slightly brighter than before
     private val C_RED  = Color.parseColor("#ff3b30")
     private val C_DRED = Color.parseColor("#520e0a")
     private val C_ENV  = Color.parseColor("#3a3a3c")
@@ -144,20 +145,20 @@ class WidgetRenderer {
 
         // ── Draw progress bars
         vBar(dayRev,  dayPct,  LP,  LP,  dDs,  dDg,  CG, fastEdge)
-        hBar(WK,      weekPct, cX,  wkY, wkDs, wkDg, CG, slowEdge)
+        hBar(WK,      weekPct, cX,  wkY, wkDs, wkDg, CG, slowEdge, dimColor = C_DIM_WEEK)
         hBar(monStr,  monthPct,cX,  mnY, mnDs, mnDg, CG, slowEdge)
         dotText(dateStr, cX + 18f * mnStep, mnY, mnStep, C_RED)    // date "26" beside JUN
         hBar(yrStr,   yearPct, cX,  yrY, yrDs, yrDg, CG, slowEdge)
 
         // ── W## label (W in red, digits in white)
         val wnStr = wn.toString().padStart(2, '0')
-        drawLabel("W",   cX,       w25Y, 9f, C_RED)
-        drawLabel(wnStr, cX + 7f,  w25Y, 9f, C_LIT)
+        drawLabel("W",   cX,       w25Y, 13f, C_RED)
+        drawLabel(wnStr, cX + 10f, w25Y, 13f, C_LIT)
 
         // ── Percentage labels  (number in red, % in white)
-        drawPct(weekPct,  pctRX, wkY + wkH / 2f,  8f)
-        drawPct(monthPct, pctRX, mnY + mnH / 2f, 10f)
-        drawPct(yearPct,  pctRX, yrY + yrH / 2f, 10f)
+        drawPct(weekPct,  pctRX, wkY + wkH / 2f,  12f)
+        drawPct(monthPct, pctRX, mnY + mnH / 2f, 15f)
+        drawPct(yearPct,  pctRX, yrY + yrH / 2f, 15f)
 
         // ── Countdown timer
         val timerStr = formatTimer(remSecs)
@@ -189,7 +190,8 @@ class WidgetRenderer {
 
     /** Horizontal bar: DIM=left(elapsed)  LIT=right(remaining). */
     private fun hBar(str: String, pct: Float, x: Float, y: Float,
-                     ds: Float, dg: Float, cg: Int, edgeColor: Int) {
+                     ds: Float, dg: Float, cg: Int, edgeColor: Int,
+                     dimColor: Int = C_DIM_OTHER) {
         val step = ds + dg
         val flat = buildList {
             str.forEachIndexed { i, ch ->
@@ -206,7 +208,7 @@ class WidgetRenderer {
             val lit  = i > dk
             for (r in 0..6) {
                 if (mask ushr (6 - r) and 1 == 0) continue
-                fr(x + i * step, y + r * step, ds, ds, if (edge) edgeColor else if (lit) C_LIT else C_DIM)
+                fr(x + i * step, y + r * step, ds, ds, if (edge) edgeColor else if (lit) C_LIT else dimColor)
             }
         }
     }
@@ -233,7 +235,7 @@ class WidgetRenderer {
                 for (oR in 0..6) {
                     if (mask ushr (6 - oR) and 1 == 0) continue
                     fr(x + oR * step, y + slot * step, ds, ds,
-                       if (edge) edgeColor else if (lit) C_LIT else C_DIM)
+                       if (edge) edgeColor else if (lit) C_LIT else C_DIM_OTHER)
                 }
             }
         }
